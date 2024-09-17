@@ -12,9 +12,19 @@
 <script>
     const jsPsych = initJsPsych();
     const hello_trial = { 
-        type: jsPsychHtmlKeyboard Response,
-        stimulus: 'Hello World'
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: 'Hello World',
+        choices: ['Y','N'],
+        trial_duration: 1000
     }
-    jsPsych.run([hello_trial]);
+
+    const hello_trial2 = { 
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: 'Hey Yall',
+        stimulus_duration: 2000,
+        prompt: 'say hi',
+        choices: ['S','K']
+    }
+    jsPsych.run([hello_trial, hello_trial2]);
   </script>
 </html>
