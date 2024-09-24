@@ -7,7 +7,9 @@
         <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
         <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
         <script src= "jspsych/modified-image-plugin.js"></script>
-        
+        <script src= "all_sentences.js"></script>
+        <script src= "association.js"></script>
+        <script src= "priming.js"></script>
     
         
 </head>
@@ -20,9 +22,11 @@ const jsPsych = initJsPsych();
 
 var sentence = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: 'I want to see a foobly mipp.',
-    choices: [' ']
+    stimulus: jsPsych.timelineVariable('sentence'),
+    choices: [' '],
+    trial_duration: 10
 };
+//string sentences mapping onto string of the sentences
 
 var attention = {
     type: jsPsychSurveyText,
@@ -32,7 +36,7 @@ var attention = {
 
 var association = {
     type: jsPsychSurveyText,
-    questions: [{prompt: "flack"}],
+    questions: [{prompt: jsPsych.timelineVariable('cue')}],
 };
 
 var fixation = {
@@ -45,7 +49,7 @@ var fixation = {
 
 var image = {
     type: jsPsychImageKeyboardResponse,
-    stimulus: 'ah.png',
+    stimulus: jsPsych.timelineVariable('image_path'),
     choices : "NO_KEYS",
     trial_duration: 500 ,
       stimulus_width: 500 ,
@@ -54,26 +58,52 @@ var image = {
 
 var prime = {
     type: jsPsychImageKeyboardResponse,
-    stimulus: 'ah.png',
+    stimulus: jsPsych.timelineVariable('image_path'),
     //trial_duration: 300
     choices : "NO_KEYS",
     trial_duration: 500 ,
       stimulus_width: 500 ,
       maintain_aspect_ratio: true,
-      prompt: "<span style = 'font-size: 200%'>foobly<br><br></span>",
+      prompt: jsPsych.timelineVariable('prime_word'),
 }
 
 var target = {
     type: jsPsychImageKeyboardResponse,
-    stimulus: 'ah.png',
+    stimulus: jsPsych.timelineVariable('image_path'),
     //trial_duration: 300
     choices : "['A', 'L']",
       stimulus_width: 500 ,
       maintain_aspect_ratio: true,
-      prompt: "<span style = 'font-size: 200%'>apple<br><br></span>",
+      prompt: jsPsych.timelineVariable('target_word'),
 }
 
-jsPsych.run([sentence, attention, association, fixation, image, prime, target]);
+var priming_procedure = {
+    timeline: [fixation, image, prime, target],
+    timeline_variables : practice_stimuli,
+    randomize_order: true
+}
+
+var training_procedure = {
+    timeline: [sentence],
+    timeline_variables : list_of_sentences,
+    randomize_order: true
+};
+//connect the trial we defined (timeline) and then for each repetition will connect where to go 
+
+
+var association_procedure = {
+    timeline: [association],
+    timeline_variables: association_cues,
+    randomize_order: true,
+    repetitions: 3
+};
+
+var training_plus_association = {
+    timeline: [ training_procedure, association_procedure],
+    repetitions: 3
+};
+
+jsPsych.run([training_plus_association, priming_procedure]);
 
   </script>
 </html>
