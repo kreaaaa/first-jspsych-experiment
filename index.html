@@ -11,6 +11,7 @@
         <script src= "association.js"></script>
         <script src= "priming.js"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
     
         
 </head>
@@ -38,6 +39,12 @@ jsPsych.data.addProperties({
     ID: id
 });
 
+var preload = {
+    type:jsPsychPreload,
+    auto_preload: true,
+    images: ['horseapple.png', 'applehorse.png']
+}
+
 var random_attention_trials = jsPsych.randomization.sampleWithoutReplacement([...Array(35).keys()].map(x => x+5),3);
 
 console.log("random_attention_trials= " + random_attention_trials);
@@ -62,7 +69,7 @@ var sentence = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: jsPsych.timelineVariable('sentence'),
     choices: [' '],
-    trial_duration: 100,
+    trial_duration: 50,
     on_finish: function(data) {
         last_trial_index = (data.trial_index + 1 ) % 40 ;
         console.log ("last_trial_index = " + last_trial_index);
@@ -131,7 +138,7 @@ var association_instructions = {
 var association = {
     type: jsPsychSurveyText,
     questions: [{prompt: jsPsych.timelineVariable('cue')}],
-    trial_duration: 10,
+    trial_duration: 50,
     data: {
         typeoftrial: 'association',
         cue: jsPsych.timelineVariable('cue')
@@ -163,7 +170,7 @@ var fixation = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: "+",
     choices : "NO_KEYS",
-    trial_duration: 500 ,
+    trial_duration: 50 ,
     data: {
         typeoftrial: 'fixation'
     },
@@ -174,10 +181,13 @@ var image = {
     type: jsPsychImageKeyboardResponse,
     stimulus: jsPsych.timelineVariable('image_path'),
     choices : "NO_KEYS",
-    trial_duration: 500,
+    trial_duration: 50,
       stimulus_width: 500,
       maintain_aspect_ratio: true,
-      prompt: "<span style= 'font-size:200%'><br><br></span>"
+      prompt: "<span style= 'font-size:200%'><br><br></span>",
+      data: {
+        typeoftrial: 'image',
+      },
     }
 
 var prime = {
@@ -185,7 +195,7 @@ var prime = {
     stimulus: jsPsych.timelineVariable('image_path'),
     //trial_duration: 300
     choices : "NO_KEYS",
-    trial_duration: 500 ,
+    trial_duration: 50 ,
       stimulus_width: 500 ,
       maintain_aspect_ratio: true,
       prompt: function (){
@@ -196,10 +206,10 @@ var prime = {
 var target = {
     type: jsPsychImageKeyboardResponse,
     stimulus: jsPsych.timelineVariable('image_path'),
-    //trial_duration: 300
     choices : ['A', 'L'],
       stimulus_width: 500 ,
       maintain_aspect_ratio: true,
+      trial_duration: 50,
       prompt:  function (){
         return "<span style= 'font-size:200%'><br>" + String(jsPsych.timelineVariable('target_word'))+"<br></span>";
     },
@@ -210,6 +220,7 @@ var target = {
         type: jsPsych.timelineVariable ('type'),
         relatedness: jsPsych.timelineVariable('relatedness'),
         correct_key: jsPsych.timelineVariable('correct_key'),
+        block_number: jsPsych.timelineVariable('block_number')
  },
 
 on_finish: function(data){
@@ -235,11 +246,17 @@ var priming_feedback = {
 }
 }
 
+var practice_procedure = {
+    timeline: [fixation, image, prime, target, priming_feedback],
+    timeline_variables : practice_stimuli,
+    randomize_order: true,
+}
 
 var priming_procedure = {
     timeline: [fixation, image, prime, target, priming_feedback],
-    timeline_variables : practice_stimuli,
-    randomize_order: true
+    timeline_variables : test_stimuli,
+    randomize_order: true,
+    repetitions: 2
 }
 
 var training_procedure = {
@@ -247,7 +264,6 @@ var training_procedure = {
     timeline_variables: sentences,
     randomize_order: true
 }
-
 
 var association_procedure = {
     timeline: [association],
@@ -261,8 +277,16 @@ var training_plus_association = {
     repetitions: 3
 }
 
-//jsPsych.run([initial_instructions, training_plus_association, priming_instructions, priming_procedure]);
-jsPsych.run([training_procedure])
+var thank_you = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: 'Thank you! You can press any key to end the experiment.',
+    data: {
+        typeoftrial: 'thank_you'
+    },
+}
+
+jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, thank_you]);
+//jsPsych.run([training_procedure])
 //jsPsych.run([training_plus_association])
 //jsPsych.run([treaining_procedure])
 
