@@ -1,4 +1,4 @@
-var list_of_sentences = [
+var sentences = [
   {
     "Triad": 1,
     "Pair": "foobly apple",
