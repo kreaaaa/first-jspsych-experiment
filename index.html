@@ -5,13 +5,13 @@
         <script src="https://unpkg.com/jspsych@7.3.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
         <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
-        <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
         <script src= "jspsych/modified-image-plugin.js"></script>
         <script src= "all_sentences.js"></script>
         <script src= "association.js"></script>
         <script src= "priming.js"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
     
         
 </head>
@@ -132,7 +132,7 @@ show_clickable_nav: true
 var association_instructions = {
     type: jsPsychInstructions,
     pages: [
-    'Done with sentences. Association time.'
+    'You are done with the first part!<br> In this segment you will be asked to type in the first word that comes to your mind when you hear or read a given word. <br> Keep in mind that in this game, you can only use words you read about in the reading session. <br>Type in your answer and press enter when you are ready for the next one.'
     ],
     show_clickable_nav: true,
     data: {
@@ -300,10 +300,11 @@ var thank_you = {
     },
 }
 
+
 jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, thank_you]);
 //jsPsych.run([training_procedure])
 //jsPsych.run([training_plus_association])
 //jsPsych.run([treaining_procedure])
 
-  </script>
+</script>
 </html>
