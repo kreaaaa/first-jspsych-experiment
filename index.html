@@ -2,16 +2,17 @@
 <html>
     <head>
         <title> Katie's experiment </title>
-        <script src="https://unpkg.com/jspsych@7.3.4"></script>
-        <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
-        <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css">
-        <script src= "jspsych/modified-image-plugin.js"></script>
-        <script src= "all_sentences.js"></script>
-        <script src= "association.js"></script>
-        <script src= "priming.js"></script>
-        <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
-        <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
+        <script src="https://unpkg.com/jspsych@7.3.3"></script>
+        <link href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
+        <script src="jspsych/modified-image-plugin.js"></script>
+        <script src="all_sentences.js"></script>
+        <script src="association.js"></script>
+        <script src="priming.js"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-instructions@2.0.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-preload@2.0.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@2.0.0"></script>
     
         
 </head>
@@ -146,7 +147,7 @@ var association = {
 var priming_instructions = {
 type: jsPsychInstructions,
 pages: [
-'This is our final game. <br><br>You will be presented with slides showing an apple and a horse. <br><br>Your task will be to respond as quickly as possible, on which side of the screen the apple or the horse is shown. <br><br>On the same screen, with pictures, two words will be presented. Read the first word, but respond in accordance with the second word. <br><br>For example, if you see words “boff” and “apple”, respond where the apple is. <br><br>If you see words “boff” and “horse”, respond where the horse is.',
+'This is our final game.<br>You will be presented with slides showing an apple and a horse.<br>Your task will be to respond as quickly as possible, on which side of the screen the apple or the horse is shown.<br>On the same screen, with pictures, two words will be presented. Read the first word,<br>but respond in accordance with the second word. For example, if you see words “boff” and “apple”,<br>respond where the apple is. If you see words “boff” and “horse”, respond where the horse is.',
 'You will press A if you want to choose the picture on the left and <br><br> L if you want to choose the picture on the right'
 ],
 show_clickable_nav: true
@@ -270,20 +271,12 @@ var training_plus_association = {
     repetitions: 3
 }
 
-var thank_you = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: 'Thank you! You can press any key to end the experiment.',
-    data: {
-        typeoftrial: 'thank_you'
-    },
-}
-
 var demographics = {
     type: jsPsychSurveyText,
     questions: [
         { prompt: "1. How old are you?", name: 'age' },
         { prompt: "2. What is your gender?", name: 'gender' },
-        { prompt: "3. How many years of formal education have you had?(consider graduating high school to be 12 years)", name: 'education_years' },
+        { prompt: "3. How many years of formal education have you had?<br>(consider graduating high school to be 12 years)", name: 'education_years' },
         { prompt: "4. Are you of Hispanic, Latino/a/x or of Spanish origin?", name: 'hispanic_origin' }
     ],
     on_finish: function(data) {
@@ -300,7 +293,13 @@ var participant_race = {
     questions: [
         {
             prompt: "5. Please specify all the racial categories that apply to you:",
-            options: ["American Indian/Alaskan Native", "Asian", "Black/African American", "Native Hawaiian or Other Pacific Islander", "White/Caucasian", "More than one race", "Other"],
+            options: ['American Indian/Alaskan Native',
+            'Asian',
+            'Black/African American',
+            'Native Hawaiian or Other Pacific Islander',
+            'White/Caucasian',
+            'More than one race',
+            'Other'],
             horizontal: true,
             required: true,
             name: 'race'
@@ -352,7 +351,7 @@ var demographics_1 = {
         { prompt: "8. Is English your first language? (Yes/No)" },
         { prompt: "8a. If responded NO to question 8: What is your first language?" },
         { prompt: "8b. If responded NO to question 8: At what age did you learn English?" },
-        { prompt: "9. Is there anything else we should know about, which might have affected your performance during the experiment? (e.g., lack of sleep, feeling ill, etc.)" }
+        { prompt: "9. Is there anything else we should know about,<br>which might have affected your performance during the experiment?<br>(e.g. lack of sleep, feeling ill, etc.)" }
     ],
     on_finish: function(data) {
         console.log("Language and other:", data.response);
@@ -361,8 +360,16 @@ var demographics_1 = {
 
 var timeline = [participant_race, time_of_day_alert, dominant_hand, demographics_1];
 
+var thank_you = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: 'Thank you! You can press any key to end the experiment.',
+    data: {
+        typeoftrial: 'thank_you'
+    },
+}
 
-jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, thank_you, demographics,participant_race, time_of_day_alert, dominant_hand, demographics_1]);
+jsPsych.run([demographics,participant_race])
+//jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, demographics,participant_race, time_of_day_alert, dominant_hand, demographics_1, thank_you]);
 //jsPsych.run([training_procedure])
 //jsPsych.run([training_plus_association])
 //jsPsych.run([treaining_procedure])
