@@ -271,6 +271,14 @@ var training_plus_association = {
     repetitions: 3
 }
 
+var ending_instructions = {
+type: jsPsychInstructions,
+pages: [
+'You will now be asked several demographic questions.<br>Please press on individual text boxes to enter as ENTER will move you on to the next page.'
+],
+show_clickable_nav: true
+}
+
 var demographics = {
     type: jsPsychSurveyText,
     questions: [
@@ -368,8 +376,8 @@ var thank_you = {
     },
 }
 
-jsPsych.run([demographics,participant_race])
-//jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, demographics,participant_race, time_of_day_alert, dominant_hand, demographics_1, thank_you]);
+
+jsPsych.run([preload, initial_instructions, training_plus_association, priming_instructions, practice_procedure, priming_procedure, ending_instructions, demographics,participant_race, time_of_day_alert, dominant_hand, demographics_1, thank_you]);
 //jsPsych.run([training_procedure])
 //jsPsych.run([training_plus_association])
 //jsPsych.run([treaining_procedure])
