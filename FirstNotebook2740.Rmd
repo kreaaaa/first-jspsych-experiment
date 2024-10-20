@@ -4,26 +4,67 @@ output: html_document
 date: "2024-10-15"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# install packages
+
+```{r}
+#install.packages("tidyverse")
 ```
 
-## R Markdown
+# load packages
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(tidyverse)
 ```
 
-## Including Plots
+#plot iris
+#plus indicates one chunk of code
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+ggplot(data = iris)+
+  geom_point(mapping = aes(x = Petal.Width, y = Petal.Length, color = Species, 
+  size = Species, shape = Species))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+ggplot(data = iris)+
+  geom_point(mapping = aes (x = Sepal.Width, y = Sepal.Length, color = Species,
+    size = Species, shape = Species))
+```
+
+#displaying aggregate data
+
+```{r}
+ggplot(data = iris) +
+  geom_col(mapping = aes (x = Species, y = Petal.Length, fill = "coral2"))
+```
+
+#load class data
+
+```{r}
+savic = read_csv("class_data.csv")
+```
+
+#basic info
+
+```{r}
+nrow(savic)
+
+ncol(savic)
+
+colnames(savic)
+
+mean(savic$correct)
+#won't work bc our columns dont have consistent data that is cutesy for R
+#can't do an average for a string
+#chr = strings and can't do math on strings
+```
+
+#histogram of RT
+
+```{r}
+ggplot(data = savic) +
+  geom_histogram(mapping = aes (x = as.numeric(rt)))
+
+range(as.numeric(savic$rt))
+```
