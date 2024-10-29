@@ -140,7 +140,7 @@ savic%>%
 
 ```
 
-#attention
+#attention fixing typos
 
 ```{r}
 attention_trials= savic%>% 
@@ -152,13 +152,56 @@ attention_trials= savic%>%
   mutate(edit_novel1 = adist(novel1, response),
          edit_novel2 = adist(novel2, response),
          edit_novel3 = adist(novel3, response)) %>% 
-  mutate(revised_correct = ifelse(edit_novel1 <2 |
-                                    edit_novel2 <2 |
-                                    edit_novel3 <2,
+  mutate(revised_correct = ifelse(edit_novel1 <= 2 |
+                                    edit_novel2 <= 2 |
+                                    edit_novel3 <= 2,
                                     1, 0),
           mismatch = ifelse(correct == revised_correct, 0, 1)) %>%
   ungroup()
 
   
+```
+
+#summarizing accuracy for attention trials
+
+```{r}
+attention_trials  %>% 
+  summarize(mean_accuracy = mean(revised_correct), 
+            sd_accuracy = sd(revised_correct))
+
+## summarize participant accuracy 
+subject_attention_accuracy = attention_trials  %>% 
+  group_by(ID)  %>% 
+  summarize(mean_accuracy = mean(revised_correct))
+
+# find IDs with less than 75% accuracy
+low_acc_IDs = subject_attention_accuracy  %>% 
+  filter(mean_accuracy < 0.75)  %>% 
+  pull(ID)
+```
+
+#need to filter based on rt in priming
+
+```{r}
+priming_data = savic %>% 
+  filter(typeoftrial == "target") %>%
+  select( ID, rt, relatedness, prime, response, type, correct, block_number, target, correct_key)  %>% 
+  filter(!is.na(rt), rt > 200, rt <1500, correct == "TRUE", block_number == 1)  %>% 
+  filter(relatedness  %in% c("related, unrelated") & type  %in% c("direct", "shared"))%>%
+  filter (!ID  %in% low_acc_IDs)
+```
+
+#plot
+
+```{r}
+priming_data %>%
+  group_by(type, relatedness) %>%
+  summarise(mean_rt = mean(rt)) %>%
+  ggplot() +
+  geom_col(mapping = aes (x= type, y= mean_rt,
+                          group = relatedness, fill = relatedness),
+           position = "dodge") +
+  theme_minimal()+
+  scale_fill_manual(values = c("firebrick2", "lightblue"))
 ```
 
