@@ -180,7 +180,7 @@ low_acc_IDs = subject_attention_accuracy  %>%
   pull(ID)
 ```
 
-#need to filter based on rt in priming
+#need to filter based on rt in priming !!!!!!!
 
 ```{r}
 priming_data = savic %>% 
@@ -204,4 +204,77 @@ priming_data %>%
   theme_minimal()+
   scale_fill_manual(values = c("firebrick2", "lightblue"))
 ```
+
+#linear models
+
+```{r}
+data (women)
+
+women %>%
+ggplot (aes(x = weight, y = height))+
+  geom_point() +
+  geom_smooth (method = "lm") +
+  theme_classic()
+  
+women_model= lm(data = women, height ~ weight)
+
+summary(women_model)
+#want coefficients to determine equation of the line 
+#height = .287 (weight) + 25.7
+# to assess model of best fit look at error
+```
+
+```{r}
+#install.packages("car")
+#to use only one function from a package 
+car:: Anova(women_model)
+
+# Weight significantly predicts height, (F, 13) = p < 0.001.
+# data Y = model (X) + error)
+```
+
+#mean petal length for each species in iris dataset
+
+```{r}
+#put set in environment
+
+data(iris)
+View(iris)
+
+iris %>%
+        group_by(Species) %>%
+        summarize(mean_length = mean(Petal.Length))
+
+iris%>%
+  ggplot (aes (x= Species, y = Petal.Length)) +
+            geom_boxplot()
+```
+
+```{r}
+iris_model = lm(data=iris, Petal.Length ~ Species)
+car :: Anova(iris_model)
+```
+# Species significantly predicted petal length (F(2, 147)= 1180.2, p < .001 ).
+#degrees of freedom always levels of IV - 1
+
+```{r}
+#install.packages("emmeans")
+ emmeans :: emmeans (iris_model,
+                     pairwise ~ Species,
+                     adjust = "tukey")
+#in console top part, 
+```
+
+# Follow up tests indicate (Tukey adjusted for multiple comparisons/pairwise comparisons) that petal length of Sertosa is significantly different from both Versicolor (t(147) = -32.51 , p < .001 ) and Virginica (t(147) = -47.521 , p <.001).
+# Versicolor petal length is also significantly different than Virginica petal length (t (147)= -15.012, p < .001).
+
+```{r}
+iris %>%
+  group_by (Species, xxxx, xxx) %>%
+  count ()
+```
+
+
+
+
 
