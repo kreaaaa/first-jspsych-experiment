@@ -183,12 +183,11 @@ low_acc_IDs = subject_attention_accuracy  %>%
 #need to filter based on rt in priming !!!!!!!
 
 ```{r}
-priming_data = savic %>% 
-  filter(typeoftrial == "target") %>%
-  select( ID, rt, relatedness, prime, response, type, correct, block_number, target, correct_key)  %>% 
-  filter(!is.na(rt), rt > 200, rt <1500, correct == "TRUE", block_number == 1)  %>% 
-  filter(relatedness  %in% c("related, unrelated") & type  %in% c("direct", "shared"))%>%
-  filter (!ID  %in% low_acc_IDs)
+priming_data= savic%>% filter(typeoftrial == "target") %>%
+  select (ID, rt, relatedness, prime, response,type, correct, block_number, target, correct_key) %>%
+  filter(!is.na(rt), rt> 200, rt< 1500, correct == "TRUE", block_number == 1) %>%
+  filter(relatedness %in% c("related", "unrelated") & type %in% c("direct", "shared")) %>%
+filter(!ID %in% low_acc_IDs)
 ```
 
 #plot
@@ -198,10 +197,10 @@ priming_data %>%
   group_by(type, relatedness) %>%
   summarise(mean_rt = mean(rt)) %>%
   ggplot() +
-  geom_col(mapping = aes (x= type, y= mean_rt,
-                          group = relatedness, fill = relatedness),
+  geom_col(mapping= aes(x= type, y= mean_rt, 
+                        group= relatedness, fill= relatedness),
            position = "dodge") +
-  theme_minimal()+
+  theme_bw() +
   scale_fill_manual(values = c("firebrick2", "lightblue"))
 ```
 
@@ -269,9 +268,9 @@ car :: Anova(iris_model)
 # Versicolor petal length is also significantly different than Virginica petal length (t (147)= -15.012, p < .001).
 
 ```{r}
-iris %>%
-  group_by (Species, xxxx, xxx) %>%
-  count ()
+priming_data %>%
+  group_by(ID,relatedness,type)%>%
+  count()
 ```
 
 
