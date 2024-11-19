@@ -8,12 +8,14 @@ date: "2024-10-15"
 
 ```{r}
 #install.packages("tidyverse")
+install.packages("ggthemes")
 ```
 
 # load packages
 
 ```{r}
 library(tidyverse)
+library(ggthemes)
 ```
 
 #plot iris
@@ -379,4 +381,44 @@ nobs(rt_model)
 check_model = rt_model
 ```
 #report a chi square
+
+
+
+#to display bar graph and points
+```{r}
+the_counts = jobsatisfaction %>%
+  group_by(gender, education_level)%>%
+  count()
+
+```
+
+
+```{r}
+mean_stuff = jobsatisfaction %>%
+group_by(gender, education_level) %>%
+summarise(mean_score = mean(score),
+            sd_score= sd(score))%>%
+left_join (the_counts) %>%
+mutate(SE = sd_score/n,
+       ymin = mean_score - 1.96*SE,
+       ymax = mean_score + 1.96*SE)
+```
+
+```{r}
+mean_stuff %>%
+  ggplot(mapping = aes(x = education_level, y = mean_score, group = gender, fill = gender))+
+  geom_col( position = "dodge") +
+  geom_errorbar(aes ( ymin = ymin, ymax = ymax),
+                width = 0.25,
+                position = position_dodge(width = 0.9))+
+  geom_point(data = jobsatisfaction, aes (x = education_level, y = score, group = gender),
+            position = position_jitterdodge(),
+            alpha = 0.3)+
+  theme_minimal()+
+  labs( x = "education level", 
+       y = "mean score")+
+  scale_fill_manual(values = c("firebrick2", "lightblue"))
+```
+
+
 
